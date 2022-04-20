@@ -10,7 +10,7 @@ xgb = XGBRegressor()
 
 x_train, x_test, y_train, y_test = dh.get_data("Chapter 02/07. Gradient Boosting and Encoding/insurance.csv")
 
-print(dh.hello)
+#print(dh.hello)
 
 def model(x_train, y_train, x_test, y_test):
     model_sel = [rf, ada, Gr, xgb]
@@ -18,9 +18,9 @@ def model(x_train, y_train, x_test, y_test):
     for mod_name in model_sel:
         clf = mod_name
         clf.fit(x_train, y_train)
-        pred = clf.predict(x_test)
-        acc = accuracy_score(y_test, pred)
-        return score.append(acc)
+        acc = clf.score(x_test, y_test)
+        score.append(acc)
+    return score
     
 sc = model(x_train, y_train, x_test, y_test)
 print(sc)
