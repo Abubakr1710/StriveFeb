@@ -21,6 +21,9 @@ def model(x_train, y_train, x_test, y_test):
         acc = clf.score(x_test, y_test)
         score.append(acc)
     return score
-    
-sc = model(x_train, y_train, x_test, y_test)
-print(sc)
+
+
+mod = GradientBoostingRegressor()
+mod.fit(x_train, y_train)
+acc = mod.score(x_test, y_test)
+print(acc)
