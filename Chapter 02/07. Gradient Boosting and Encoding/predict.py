@@ -1,17 +1,15 @@
-
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OrdinalEncoder
 import numpy as np
-from train import mod
+from train import best_model
+model  = best_model
 while True:
 
     age = int(input("How old are you? \n"))
-    sex = input('what is your sex? \n')
+    sex = str(input('what is your sex? \n'))
     child = int(input("How many children do you have? \n"))
     smoker = bool(input("Do you smoke? \n"))
     bmi = float(input("what is your body bmi index? \n"))
-    region = input('which region do you live in? (southwest,southeast,northwest,northeast) \n')
+    region = str(input('which region do you live in? (southwest,southeast,northwest,northeast) \n'))
 
     ndata = pd.DataFrame({
         'age':[age],
@@ -22,13 +20,14 @@ while True:
         'region': [region]
     })
     
-    X = ndata.values
-    encoder = ColumnTransformer( [('ordinal', OrdinalEncoder(handle_unknown= 'use_encoded_value', unknown_value = -1), [1,4,5] )] )
-    X = np.concatenate((X[:,[0,2,3]],encoder.fit_transform(X)),axis=1)
+    gb = model[0]
+    tr = model[1]
+
+    data_transform = tr.transform(ndata.values)
+    pred = np.array(gb.predict(data_transform))
+    print(pred)
 
 
-    pred = mod.predict(X)
-    print(*pred.round())
     cont = str(input('Do you want to recalculate?(yes/no) \n'))
     if cont == 'no':
         break

@@ -8,7 +8,9 @@ ada = AdaBoostRegressor()
 Gr = GradientBoostingRegressor()
 xgb = XGBRegressor()
 
-x_train, x_test, y_train, y_test = dh.get_data("Chapter 02/07. Gradient Boosting and Encoding/insurance.csv")
+x_train, x_test, y_train, y_test, ct = dh.get_data("Chapter 02/07. Gradient Boosting and Encoding/insurance.csv")
+
+print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 
 #print(dh.hello)
 
@@ -27,3 +29,5 @@ mod = GradientBoostingRegressor()
 mod.fit(x_train, y_train)
 acc = mod.score(x_test, y_test)
 print(acc)
+
+best_model = [mod, ct]
