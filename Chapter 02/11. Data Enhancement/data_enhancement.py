@@ -27,12 +27,12 @@ data = pd.read_csv(r'data\london_merged.csv')
 
 np.random.seed(0)
 
-#target = data['cnt']
-#data = data.drop(['cnt'], axis=1)
+target = data['cnt']
+data = data.drop(['cnt'], axis=1)
 
 #Print data shape
-#print(target.shape)
-#print(data.shape)
+print(target.shape)
+print(data.shape)
 
 #Take a look at nulls 0 nulls
 #print(target.isnull().sum())
