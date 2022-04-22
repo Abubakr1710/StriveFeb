@@ -10,18 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn import metrics
 from sklearn.metrics import accuracy_score
 import time
-
-
-from sklearn.tree          import DecisionTreeRegressor
-from sklearn.ensemble      import RandomForestRegressor
-from sklearn.ensemble      import ExtraTreesRegressor
-from sklearn.ensemble      import AdaBoostRegressor
-from sklearn.ensemble      import GradientBoostingRegressor
-from xgboost               import XGBRegressor
-from lightgbm              import LGBMRegressor
-from catboost              import CatBoostRegressor
-
-
+import data_handler as dh
 
 np.random.seed(0)
 
@@ -39,45 +28,7 @@ data.drop('timestamp', axis=1, inplace=True)
 
 x,y = data.drop(['cnt'], axis=1), data['cnt']
 
-def enhance(df):
-    dfc = df.copy()
-
-    for season in dfc['season'].unique():
-        seasonal_data = dfc[dfc['season'] == season]
-        hum_std = seasonal_data['hum'].std()
-        wind_speed_std = seasonal_data['wind_speed'].std()
-        t1_std = seasonal_data['t1'].std()
-        t2_std = seasonal_data['t2'].std()
-
-        for i in dfc[dfc['season'] == season].index:
-            if np.random.randint(2) == 1:
-                dfc['hum'].values[i] +=hum_std/50
-            else:
-                dfc['hum'].values[i] -= hum_std/50
-
-            if np.random.randint(2) == 1:
-                dfc['wind_speed'].values[i] += wind_speed_std/50
-            else:
-                dfc['wind_speed'].values[i] -= wind_speed_std/50
-
-            if np.random.randint(2) == 1:
-                dfc['t1'].values[i] += t1_std/50
-            else:
-                dfc['t1'].values[i] += t1_std/50
-
-            if np.random.randint(2) == 1:
-                dfc['t2'].values[i] += t2_std/50
-            else:
-                dfc['t2'].values[i] += t2_std/50
-            
-    return dfc
-
-print(data.head(3))
-enh = enhance(data)
-print(enh.head(3))
-
-cat_vars = ['season','is_weekend','is_holiday','year','month','weather_code']
-num_vars = ['t1','t2','hum','wind_speed']
+enh = dh.enhance(data)
 
 x_train, x_val, y_train, y_val = train_test_split(x, y,
                                     test_size=0.2,
@@ -97,32 +48,7 @@ y_val = transformer.transform(y_val.values.reshape(-1,1))
 
 rang = abs(y_train.max()) + abs(y_train.min())
 
-num_4_treeModels = pipeline.Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='constant', fill_value=-9999)),
-])
-
-cat_4_treeModels = pipeline.Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='constant', fill_value=-9999)),
-    ('ordinal', OrdinalEncoder()) # handle_unknown='ignore' ONLY IN VERSION 0.24
-])
-
-tree_prepro = ColumnTransformer(transformers=[
-    ('num', num_4_treeModels, num_vars),
-    ('cat', cat_4_treeModels, cat_vars),
-], remainder='drop')
-
-tree_classifiers = {
-  "Decision Tree": DecisionTreeRegressor(),
-  "Extra Trees":   ExtraTreesRegressor(n_estimators=100),
-  "Random Forest": RandomForestRegressor(n_estimators=100),
-  "AdaBoost":      AdaBoostRegressor(n_estimators=100),
-  "Skl GBM":       GradientBoostingRegressor(n_estimators=100),
-  "XGBoost":       XGBRegressor(n_estimators=100),
-  "LightGBM":      LGBMRegressor(n_estimators=100),
-  "CatBoost":      CatBoostRegressor(n_estimators=100),
-}
-
-tree_classifiers = {name: pipeline.make_pipeline(tree_prepro, model) for name, model in tree_classifiers.items()}
+tree_classifiers = dh.tree_classifiers()
 
 results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], " % error": [], 'Time': [],})
 
@@ -139,7 +65,6 @@ for model_name, model in tree_classifiers.items():
                               "MAB": metrics.mean_absolute_error(y_val, pred),
                               " % error": metrics.mean_squared_error(y_val, pred) / rang,
                               "Time":     total_time
-                              #"Accuracy score": accuracy_score(y_val, pred)
                               },
                               ignore_index=True)
 ### END SOLUTION
