@@ -33,7 +33,7 @@ def model_results():
     results_ord.index += 1 
     results_ord.style.bar(subset=['Accuracy', 'Bal Acc.'], vmin=0, vmax=100, color='#5fba7d')
     return results_ord
-# mod_res = model_results()
+mod_res = model_results()
 # print(mod_res)
 
 
@@ -65,8 +65,12 @@ def mod_res_kfold():
     results_ord.style.bar(subset=['Accuracy', 'Bal Acc.'], vmin=0, vmax=100, color='#5fba7d')
     return results_ord
 
-# res_kfold = mod_res_kfold()
+res_kfold = mod_res_kfold()
 # print(res_kfold)
+
+print('Results for Models:\n',mod_res, '\n')
+print('Results for StratifiedKfold:\n', res_kfold, '\n')
+
 
 def mod():
     best_model = tree_classifiers['Skl GBM']
