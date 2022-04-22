@@ -61,7 +61,7 @@ def data_enhancement(data):
     
     for season in data['season'].unique():
         seasonal_data =  gen_data[gen_data['season'] == season]
-        hum_std = seasonal_data['hum'].std()
+        hum_std = seasonal_data['hum'].mean()
         wind_speed_std = seasonal_data['wind_speed'].std()
         t1_std = seasonal_data['t1'].std()
         t2_std = seasonal_data['t2'].std()
@@ -181,10 +181,10 @@ results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
 results_ord.index += 1 
 results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
 
-print(results_ord)
+# print(results_ord)
 
 
-print(y_train.max())
-print(y_train.min())
-print(y_val[3])
-print(tree_classifiers['Random Forest'].predict(x_val)[3])
+# print(y_train.max())
+# print(y_train.min())
+# print(y_val[3])
+# print(tree_classifiers['Random Forest'].predict(x_val)[3])
