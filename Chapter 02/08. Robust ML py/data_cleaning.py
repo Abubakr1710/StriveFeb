@@ -32,7 +32,7 @@ def cleaned_data():
     df["Title"] = df['Title'].map(title_dictionary)
     df_test["Title"] = df_test["Title"].map(title_dictionary)
     
-    x = df.drop(columns=["Survived", 'Name', 'Ticket', 'Cabin']) # X DATA (WILL BE TRAIN+VALID DATA)
-    y = df["Survived"] # 0 = No, 1 = Yes
-    x_test = df_test.drop(columns=['Name', 'Ticket', 'Cabin']) # # X_TEST DATA (NEW DATA)
+    x = df.drop(columns=["Survived", 'Name', 'Ticket', 'Cabin'])
+    y = df["Survived"]
+    x_test = df_test.drop(columns=['Name', 'Ticket', 'Cabin'])
     return x,y,x_test

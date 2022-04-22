@@ -45,7 +45,6 @@ def mod_res_kfold():
     for model_name, model in tree_classifiers.items():
         start_time = time.time()
             
-        # TRAIN AND GET PREDICTIONS USING cross_val_predict() and x,y
         pred = cross_val_predict(model, x, y, cv=skf)
 
         total_time = time.time() - start_time

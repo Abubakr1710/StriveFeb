@@ -11,7 +11,7 @@ from sklearn.ensemble      import RandomForestClassifier
 from sklearn.ensemble      import ExtraTreesClassifier
 from sklearn.ensemble      import AdaBoostClassifier
 from sklearn.ensemble      import GradientBoostingClassifier
-from sklearn.experimental  import enable_hist_gradient_boosting # Necesary for HistGradientBoostingClassifier
+from sklearn.experimental  import enable_hist_gradient_boosting 
 from sklearn.ensemble      import HistGradientBoostingClassifier
 from xgboost               import XGBClassifier
 from lightgbm              import LGBMClassifier
