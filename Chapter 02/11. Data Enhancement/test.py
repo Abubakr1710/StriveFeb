@@ -1,9 +1,7 @@
+from multiprocessing.spawn import import_main_path
+import pandas as pd
+import numpy as np
 
 
-a = "Aaaa"
-b = a
-
-b+="b"
-
-print(a)
-print(b)
+data = pd.read_csv('london_merged.csv')
+data
