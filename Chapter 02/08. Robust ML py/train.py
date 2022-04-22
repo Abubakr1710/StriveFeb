@@ -1,70 +1,81 @@
-from turtle import pd
+from unittest import result
 import pandas as pd
-import testhandler as dh
+import data_handler as dh
+import data_cleaning as dc
+from sklearn.model_selection import train_test_split
 import time
 from sklearn import metrics
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
-#Loading data
-df      = pd.read_csv("Chapter 02/08. Robust ML py/train.csv", index_col='PassengerId')
-df_test = pd.read_csv("Chapter 02/08. Robust ML py/test.csv",  index_col='PassengerId')
+x,y,x_test = dc.cleaned_data()
+tree_classifiers =dh.tree_classifiers()
 
-#Extract the title
-get_Title_from_Name = lambda x : x.split(',')[1].split('.')[0].strip()
-df['Title'] = df['Name'].apply(get_Title_from_Name)
-df_test['Title'] = df_test['Name'].apply(get_Title_from_Name)
+def model_results():
 
-title_dictionary = {
-    "Capt": "Officer",
-    "Col": "Officer",
-    "Major": "Officer",
-    "Jonkheer": "Royalty",
-    "Don": "Royalty",
-    "Sir" : "Royalty",
-    "Dr": "Officer",
-    "Rev": "Officer",
-    "the Countess":"Royalty",
-    "Mme": "Mrs",
-    "Mlle": "Miss",
-    "Ms": "Mrs",
-    "Mr" : "Mr",
-    "Mrs" : "Mrs",
-    "Miss" : "Miss",
-    "Master" : "Master",
-    "Lady" : "Royalty"
-}
+    X_train, X_val, y_train, y_val = train_test_split(x, y, train_size=0.8, random_state=0, stratify=y)
 
-df["Title"] = df['Title'].map(title_dictionary)
-df_test["Title"] = df_test["Title"].map(title_dictionary)
+    results = pd.DataFrame({'Model': [], 'Accuracy': [], 'Bal Acc.': [], 'Time': []})
 
-x = df.drop(columns=["Survived", 'Name', 'Ticket', 'Cabin']) # X DATA (WILL BE TRAIN+VALID DATA)
-y = df["Survived"] # 0 = No, 1 = Yes
+    for model_name, model in tree_classifiers.items():
+        start_time = time.time()        
+        model.fit(X_train,y_train)
+        pred =model.predict(X_val)
 
-x_test = df_test.drop(columns=['Name', 'Ticket', 'Cabin']) # # X_TEST DATA (NEW DATA)
+        total_time = time.time() - start_time
 
-from sklearn.model_selection import train_test_split
-X_train, X_val, y_train, y_val = train_test_split(x, y, train_size=0.8, random_state=0, stratify=y)
+        results = results.append({"Model":    model_name,
+                                "Accuracy": metrics.accuracy_score(y_val, pred)*100,
+                                "Bal Acc.": metrics.balanced_accuracy_score(y_val, pred)*100,
+                                "Time":     total_time},
+                                ignore_index=True)
+                                
+    results_ord = results.sort_values(by=['Accuracy'], ascending=False, ignore_index=True)
+    results_ord.index += 1 
+    results_ord.style.bar(subset=['Accuracy', 'Bal Acc.'], vmin=0, vmax=100, color='#5fba7d')
+    return results_ord
+# mod_res = model_results()
+# print(mod_res)
 
 
-results = pd.DataFrame({'Model': [], 'Accuracy': [], 'Bal Acc.': [], 'Time': []})
-tree_classifier =dh.tree_classifiers()
+def mod_res_kfold():
+    skf =StratifiedKFold(n_splits=10,shuffle=True, random_state=0,)
 
-for model_name, model in tree_classifier.items():
-    start_time = time.time()
-    
-    # FOR EVERY PIPELINE (PREPRO + MODEL) -> TRAIN WITH TRAIN DATA (x_train)
-    
-    model.fit(X_train,y_train)
-    # GET PREDICTIONS USING x_val
-    pred =model.predict(X_val)
+    results = pd.DataFrame({'Model': [], 'Accuracy': [], 'Bal Acc.': [], 'Time': []})
 
-    total_time = time.time() - start_time
+    for model_name, model in tree_classifiers.items():
+        start_time = time.time()
+            
+        # TRAIN AND GET PREDICTIONS USING cross_val_predict() and x,y
+        pred = cross_val_predict(model, x, y, cv=skf)
 
-    results = results.append({"Model":    model_name,
-                              "Accuracy": metrics.accuracy_score(y_val, pred)*100,
-                              "Bal Acc.": metrics.balanced_accuracy_score(y_val, pred)*100,
-                              "Time":     total_time},
-                              ignore_index=True)
-                              
-results_ord = results.sort_values(by=['Accuracy'], ascending=False, ignore_index=True)
-results_ord.index += 1 
-print(results_ord.style.bar(subset=['Accuracy', 'Bal Acc.'], vmin=0, vmax=100, color='#5fba7d'))
+        total_time = time.time() - start_time
+
+        results = results.append({"Model":    model_name,
+                                "Accuracy": metrics.accuracy_score(y, pred)*100,
+                                "Bal Acc.": metrics.balanced_accuracy_score(y, pred)*100,
+                                "Time":     total_time},
+                                ignore_index=True)
+                                
+                                
+
+
+
+    results_ord = results.sort_values(by=['Accuracy'], ascending=False, ignore_index=True)
+    results_ord.index += 1 
+    results_ord.style.bar(subset=['Accuracy', 'Bal Acc.'], vmin=0, vmax=100, color='#5fba7d')
+    return results_ord
+
+# res_kfold = mod_res_kfold()
+# print(res_kfold)
+
+def mod():
+    best_model = tree_classifiers['Skl GBM']
+    best_model.fit(x,y)
+    test_pred = best_model.predict(x_test)
+    sub1 = pd.DataFrame({
+        'Survived': test_pred,
+        'sex': x_test['Sex']
+        })
+    return sub1
+ans = mod()
+print(ans)
