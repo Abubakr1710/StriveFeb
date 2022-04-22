@@ -28,20 +28,10 @@ data.drop('timestamp', axis=1, inplace=True)
 
 x,y = data.drop(['cnt'], axis=1), data['cnt']
 
-enh = dh.enhance(data)
-
 x_train, x_val, y_train, y_val = train_test_split(x, y,
                                     test_size=0.2,
                                     random_state=0  # Recommended for reproducibility
                                 )
-x_train_old = x_train
-y_train_old = y_train
-
-ext_sam = enh.sample(enh.shape[0] // 4)
-x_train = pd.concat([x_train, ext_sam.drop(['cnt'], axis=1 ) ])
-y_train = pd.concat([y_train, ext_sam['cnt'] ])
-
-
 
 transformer = PowerTransformer()
 y_train = transformer.fit_transform(y_train.values.reshape(-1,1))
@@ -81,4 +71,3 @@ print('ytrain max:',y_train.max())
 print('ytrain min:',y_train.min())
 print(y_val[5])
 print(tree_classifiers['Random Forest'].predict(x_val)[5])
-print('Train part size is increased by:',round(len(x_train)/len(x_train_old),1),'times after Data Enhancement')
