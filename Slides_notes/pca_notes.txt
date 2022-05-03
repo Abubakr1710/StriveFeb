@@ -1,0 +1,104 @@
+PCA Notes:
+
+Dimensionality Reduction:
+ It removes/select features to improve the accuracy of the model
+
+
+Curse of Dimrnsionality:
+ When you have too many features, your model will start it's accurasy.
+
+
+Two main ways to do Dimensionality Reduction
+ Feature Selection
+  Selecting a subset of features out of the original features in order to reduce model complexity, enhance the computational efficiency
+ Feature Extraction:
+  Extracting/deriving information from the original features set to create a new features subspace
+
+
+Advantages of Dimensionality Reduction:
+ Removes inconsistencies in the features
+ Highlights relevant features, not all features relevant to our problem
+ Avoids overfitting due to strong correlations
+ Reduces computational time and space complexity
+
+
+Disadvantages of Dimensionality Reduction:
+ More difficult explain the meaning
+ Fundamentally ‘miss’ some information
+
+
+What Is Principal Component Analysis?
+Principal Component Analysis, or PCA,
+ is a dimensionality-reduction method that is often used to reduce the dimensionality of large data sets, 
+ by transforming a large set of variables into a smaller one that still contains most of the information in the large set.
+
+
+What is PCA?
+Principal component analysis (PCA) is a technique that transforms high-dimensions data into lower-dimensions 
+while retaining as much information as possible.
+
+
+Goal of PCA:
+ From high dimensional space to low dimensional space
+
+
+Supervised or Unsupervised?
+ Unsupervised
+
+
+PCA works best on data set having 3 or higher dimensions. 
+Because, with higher dimensions, 
+it becomes increasingly difficult to make interpretations from the resultant cloud of data.
+PCA is applied on a data set with numeric variables.
+PCA is a tool which helps to produce better visualizations of high dimensional data.
+
+
+Best direction to pick is the EigenVector with the largest EigenValues
+
+Second component does not contain informations on that already in the first component.
+
+All Components are orthogonal to each other'
+
+Directions picked by PCA are exactly EigenVectors of Covariance matrix
+
+
+PCA Algorithm:
+ Standardize the data(StandardScaler())
+ Construct the covariance matrix
+ Decompose covariance(X) into: Eigen Vectors and Eigen values.
+  Eigen Vectors : AXIS that explain most of the covariance matrix.
+  Eigen Values: The importance of Eigen Vectors
+ Sort Eigen Values by decreasing order to rank corresponding eigen vector
+ Select the first K
+ Construct a projection matrix W by using the top K eigen vectors
+ Use W to transform X int a K  dimensional space
+
+PCA Attributes:
+
+ components_
+  Principal axes in feature space, representing the directions of maximum variance in the data. 
+  Equivalently, the right singular vectors of the centered input data, parallel to its eigenvectors. 
+  The components are sorted by explained_variance_.
+
+ explained_variance_
+  The amount of variance explained by each of the selected components. The variance estimation uses n_samples - 1 degrees of freedom.
+
+ explained_variance_ratio_
+  Percentage of variance explained by each of the selected components.
+ n_components_
+  The estimated number of components. 
+  When n_components is set to ‘mle’ or a number between 0 and 1 (with svd_solver == ‘full’) this number is estimated from input data. 
+  Otherwise it equals the parameter n_components, or the lesser value of n_features and n_samples if n_components is None.
+
+Git Terminal commands:
+0. git status
+1. git add filename
+2  git commit -m 'insert your log message'
+3. git push
+4. git checkout main
+5. git fetch (to check for changes)
+6. git pull
+7. git merge
+
+
+  
