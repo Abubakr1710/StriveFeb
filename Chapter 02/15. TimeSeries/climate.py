@@ -1,12 +1,14 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+import split as sp
+from sklearn import metrics
+import time
 
 data =pd.read_csv('Chapter 02/15. TimeSeries/climate.csv')
 data =data.drop(['Date Time'], axis=1)
 #print(data)
 
-def paring(data, seq_len=7):
+def paring(data, seq_len=5):
     x=[]
     y=[]
     for i in range(0, (data.shape[0]-(seq_len+1)), seq_len+1):
@@ -19,17 +21,43 @@ def paring(data, seq_len=7):
     
     return np.array(x), np.array(y)
 
-
-print(data.shape)
 x, y = paring(data)
-print(x.shape)
-print(y[0])
-print(y[1])
-print(len(y))
-print(len(data))
-print(len(data)/len(y))
-# def split(x,y):
-#     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
-#     return X_train, X_test ,y_train, y_test
+# print(data.shape)
+# print(x.shape)
+# print(y[0])
+# print(y[1])
+# print(len(y))
+# print(len(data))
+# print(len(y)/len(data))
+# print(x)
 
-# X_train, X_test, y_train, y_test = split(x,y)
+
+X_train, X_test, y_train, y_test = sp.splitting(x,y)
+
+results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], " % error": [], 'Time': [],})
+tree_classifiers = sp.tree_regressors
+
+for model_name, model in tree_classifiers.items():
+    rang = abs(y_train.max()) + abs(y_train.min())
+    
+    start_time = time.time()
+    model.fit(X_train, y_train.ravel())
+    total_time = time.time() - start_time
+        
+    pred = model.predict(X_test)
+    
+    results = results.append({"Model":    model_name,
+                              "MSE": metrics.mean_squared_error(y_test, pred),
+                              "MAB": metrics.mean_absolute_error(y_test, pred),
+                              " % error": metrics.mean_squared_error(y_test, pred) / rang,
+                              "Time":     total_time
+                              },
+                              ignore_index=True)
+
+
+
+results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
+results_ord.index += 1 
+results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
+
+print(results_ord)
