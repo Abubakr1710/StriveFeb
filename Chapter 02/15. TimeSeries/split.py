@@ -9,6 +9,7 @@ from sklearn.ensemble      import GradientBoostingRegressor
 from xgboost               import XGBRegressor
 from lightgbm              import LGBMRegressor
 from catboost              import CatBoostRegressor
+from sklearn.linear_model  import LinearRegression
 
 
 def splitting(x,y):
@@ -19,6 +20,7 @@ def splitting(x,y):
 
 def tree_regressors():
     tree_regressor = {
+    'Linear':        LinearRegression(),
     "Decision Tree": DecisionTreeRegressor(),
     "Extra Trees":   ExtraTreesRegressor(n_estimators=100),
     "Random Forest": RandomForestRegressor(n_estimators=100),

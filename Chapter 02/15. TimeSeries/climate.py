@@ -4,6 +4,7 @@ import split as sp
 from sklearn import metrics
 import time
 
+
 data =pd.read_csv('Chapter 02/15. TimeSeries/climate.csv')
 data =data.drop(['Date Time'], axis=1)
 #print(data)
@@ -35,11 +36,11 @@ x, y = paring(data)
 X_train, X_test, y_train, y_test = sp.splitting(x,y)
 
 results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], " % error": [], 'Time': [],})
-tree_classifiers = sp.tree_regressors
+tree_classifiers = sp.tree_regressors()
 
 for model_name, model in tree_classifiers.items():
     rang = abs(y_train.max()) + abs(y_train.min())
-    
+
     start_time = time.time()
     model.fit(X_train, y_train.ravel())
     total_time = time.time() - start_time
@@ -61,3 +62,4 @@ results_ord.index += 1
 results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
 
 print(results_ord)
+
