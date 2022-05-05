@@ -6,7 +6,7 @@ data =pd.read_csv('Chapter 02/15. TimeSeries/climate.csv')
 data =data.drop(['Date Time'], axis=1)
 #print(data)
 
-def paring(data, seq_len=6):
+def paring(data, seq_len=7):
     x=[]
     y=[]
     for i in range(0, (data.shape[0]-(seq_len+1)), seq_len+1):
@@ -25,5 +25,11 @@ x, y = paring(data)
 print(x.shape)
 print(y[0])
 print(y[1])
+print(len(y))
+print(len(data))
+print(len(data)/len(y))
+# def split(x,y):
+#     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
+#     return X_train, X_test ,y_train, y_test
 
-# train_test_split
+# X_train, X_test, y_train, y_test = split(x,y)
