@@ -84,7 +84,7 @@ def tree_regressors():
     return tree_regressor
 
 reg =tree_regressors()
-results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'Time': [],})
+results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'R2_score': [],'Time': [],})
 for model_name, model in reg.items():
 
     start_time = time.time()
@@ -96,6 +96,7 @@ for model_name, model in reg.items():
     results = results.append({"Model":    model_name,
                               "MSE": metrics.mean_squared_error(y_test, pred),
                               "MAB": metrics.mean_absolute_error(y_test, pred),
+                              "R2_score": metrics.r2_score(y_test, pred),
                               "Time":     total_time
                               },
                               ignore_index=True)
