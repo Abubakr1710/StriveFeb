@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-df = pd.read_csv('climate.csv')
+df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
 df = df.drop(columns="Date Time")
 
 def get_sequence(data, seq_len, target_name):
