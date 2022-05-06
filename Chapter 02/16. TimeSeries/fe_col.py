@@ -1,7 +1,7 @@
 # Importng needed libraries
+from matplotlib.pyplot import axis
 import numpy as np
 import pandas as pd
-import pip
 
 from sklearn.model_selection import train_test_split
 
@@ -42,13 +42,55 @@ print(y.shape)
 def get_features(x):
     feature = []
     for i in range(x.shape[0]):
-        for j in range(x.shape[1]):
-            mean_column = np.mean(x[i, j, :])
-
-
+        mean_column = x[i].mean(axis=0)
         feature.append(mean_column)
-        #feature =np.hstack((mean_column_1, std_columns_2))
     return np.array(feature)
 
 nx = get_features(x)
-print(nx.shape)
+#print(nx.shape)
+
+def split(X,y):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+    return X_train, X_test, y_train, y_test
+
+X_train, X_test, y_train, y_test = split(nx, y)
+
+#----------------------------------------------------------------------------------------------------------------------------------------#  
+
+def tree_regressors():
+    tree_regressor = {
+    'Linear':        LinearRegression(),
+    "Skl GBM":       GradientBoostingRegressor(),
+    "XGBoost":       XGBRegressor(),
+    "LightGBM":      LGBMRegressor()
+    }
+    tree_regressor ={model_name: Pipeline([('scaler', StandardScaler()),('model', model)])for model_name, model in tree_regressor.items()}
+    return tree_regressor
+
+reg =tree_regressors()
+#------------------------------------------------------------------------------#
+
+results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'R2_score': [],'Time': [],})
+for model_name, model in reg.items():
+
+    start_time = time.time()
+    model.fit(X_train, y_train)
+    total_time = time.time() - start_time
+        
+    pred = model.predict(X_test)
+    
+    results = results.append({"Model":    model_name,
+                              "MSE": metrics.mean_squared_error(y_test, pred),
+                              "MAB": metrics.mean_absolute_error(y_test, pred),
+                              "R2_score": metrics.r2_score(y_test, pred),
+                              "Time":     total_time
+                              },
+                              ignore_index=True)
+
+
+
+results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
+results_ord.index += 1 
+results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
+
+print(results_ord)

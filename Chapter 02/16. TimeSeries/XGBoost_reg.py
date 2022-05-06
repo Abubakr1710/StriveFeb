@@ -1,5 +1,6 @@
 # Importng needed libraries
 import lightgbm
+from matplotlib.backend_bases import LocationEvent
 import numpy as np
 import pandas as pd
 import pip
@@ -15,6 +16,7 @@ import time
 from sklearn import metrics
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from joblib import Memory
 #----------------------------------------------------------------------------------#
 df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
 df = df.drop(columns="Date Time")
@@ -46,21 +48,21 @@ def get_features(x):
     for i in range(x.shape[0]):
         mean_column_1 = np.mean(x[i, :, 0])
         std_column_2 =np.std(x[i, :, 1])
-        min_column_3 =np.min(x[i, :, 2])
+        mean_column_3 =np.mean(x[i, :, 2])
         std_column_4 =np.std(x[i, :, 3])
-        mode_column_5 =np.min(x[i, :, 4])
-        median_column_6 =np.min(x[i, :, 5])
-        min_column_7 =np.min(x[i, :, 6])
-        max_column_8 =np.min(x[i, :, 7])
-        mean_column_9 =np.min(x[i, :, 8])
-        mode_column_10=np.min(x[i, :, 9])
-        median_column_11=np.min(x[i, :, 10])
-        std_column_12=np.min(x[i, :, 11])
-        mean_column_13=np.min(x[i, :, 12])
-        mean_column_14=np.min(x[i, :, 13])
+        median_column_5 =np.median(x[i, :, 4])
+        median_column_6 =np.median(x[i, :, 5])
+        median_column_7 =np.median(x[i, :, 6])
+        max_column_8 =np.max(x[i, :, 7])
+        mean_column_9 =np.mean(x[i, :, 8])
+        min_column_10=np.min(x[i, :, 9])
+        median_column_11=np.median(x[i, :, 10])
+        std_column_12=np.std(x[i, :, 11])
+        mean_column_13=np.mean(x[i, :, 12])
+        mean_column_14=np.mean(x[i, :, 13])
 
-        feature.append((mean_column_1, std_column_2,min_column_3,std_column_4,mode_column_5,median_column_6,min_column_7,
-                        max_column_8,mean_column_9,mode_column_10,median_column_11,std_column_12,mean_column_13,mean_column_14))
+        feature.append((mean_column_1, std_column_2,mean_column_3,std_column_4,median_column_5,median_column_6,median_column_7,
+                        max_column_8,mean_column_9,min_column_10,median_column_11,std_column_12,mean_column_13,mean_column_14))
         #feature =np.hstack((mean_column_1, std_columns_2))
     return np.array(feature)
 
@@ -78,7 +80,7 @@ X_train, X_test, y_train, y_test =split(nx, y)
 scaler =StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
-mod =XGBRegressor()
+mod =LGBMRegressor()
 mod.fit(X_train, y_train)
 pred = mod.predict(X_test)
 print(metrics.mean_squared_error(y_test, pred))
