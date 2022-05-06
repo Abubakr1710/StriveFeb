@@ -1,5 +1,8 @@
+# Importng needed libraries
 import numpy as np
 import pandas as pd
+
+from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
 df = df.drop(columns="Date Time")
@@ -24,18 +27,41 @@ x, y = get_sequence(df, seq_len= 6, target_name='T (degC)')
 print(x.shape)
 print(y.shape)
 
+
+#Feature extraction
 def get_features(x):
     feature = []
     for i in range(x.shape[0]):
         mean_column_1 = np.mean(x[i, :, 0])
-        std_columns_2 =np.std(x[i, :, 1])
-        feature.append((mean_column_1, std_columns_2))
+        std_column_2 =np.std(x[i, :, 1])
+        min_column_3 =np.min(x[i, :, 2])
+        max_column_4 =np.min(x[i, :, 3])
+        mode_column_5 =np.min(x[i, :, 4])
+        median_column_6 =np.min(x[i, :, 5])
+        min_column_7 =np.min(x[i, :, 6])
+        max_column_8 =np.min(x[i, :, 7])
+        mean_column_9 =np.min(x[i, :, 8])
+        mode_column_10=np.min(x[i, :, 9])
+        median_column_11=np.min(x[i, :, 10])
+        std_column_12=np.min(x[i, :, 11])
+        mean_column_13=np.min(x[i, :, 12])
+        mean_column_14=np.min(x[i, :, 13])
+
+        feature.append((mean_column_1, std_column_2,min_column_3,max_column_4,mode_column_5,median_column_6,min_column_7,
+                        max_column_8,mean_column_9,mode_column_10,median_column_11,std_column_12,mean_column_13,mean_column_14))
         #feature =np.hstack((mean_column_1, std_columns_2))
     return np.array(feature)
 
 nx = get_features(x)
 print(nx.shape)
 
+
+# Splitting the data
+def split(X,y):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+    return X_train, X_test, y_train, y_test
+
+X_train, X_test, y_train, y_test =split(nx, y)
 
     
 
