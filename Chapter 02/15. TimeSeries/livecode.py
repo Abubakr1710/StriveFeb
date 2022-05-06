@@ -1,3 +1,4 @@
+from matplotlib.pyplot import axis
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -38,7 +39,8 @@ def get_feat(x):
     nx =[]
     for i in range(x.shape[0]):
         meanx = x[i].mean(axis=0)
-        nx.append(meanx)
+        stdx =x[i].std(axis=0)
+        nx.append((meanx, stdx))
     
     return np.array(nx)
 nx =get_feat(x)
