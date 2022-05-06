@@ -61,5 +61,5 @@ results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
 results_ord.index += 1 
 results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
 
-print(results_ord)
+#print(results_ord)
 
