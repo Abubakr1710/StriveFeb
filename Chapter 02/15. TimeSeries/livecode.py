@@ -2,14 +2,9 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from sklearn.tree          import DecisionTreeRegressor
-from sklearn.ensemble      import RandomForestRegressor
-from sklearn.ensemble      import ExtraTreesRegressor
-from sklearn.ensemble      import AdaBoostRegressor
 from sklearn.ensemble      import GradientBoostingRegressor
 from xgboost               import XGBRegressor
 from lightgbm              import LGBMRegressor
-from catboost              import CatBoostRegressor
 from sklearn.linear_model  import LinearRegression
 
 import time
