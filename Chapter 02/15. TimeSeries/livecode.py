@@ -42,14 +42,9 @@ print(y.shape)
 def get_feat(x):
     nx =[]
     for i in range(x.shape[0]):
-        gr =[]
-        for j in range(x.shape[2]):
-            gr.append(np.min(x[i][:,j]))
-            gr.append(np.max(x[i][:,j]))
-            gr.append(np.mean(x[i][:,j]))
-            gr.append(np.std(x[i][:,j]))
+        meanx = x[i].mean(axis=0)
+        nx.append(meanx)
     
-        nx.append(gr)
     return np.array(nx)
 nx =get_feat(x)
 print(nx.shape)
@@ -64,8 +59,6 @@ X_train, X_test ,y_train, y_test =splitting(nx,y)
 def tree_regressors():
     tree_regressor = {
     'Linear':        LinearRegression(),
-    "Extra Trees":   ExtraTreesRegressor(n_estimators=100),
-    "Random Forest": RandomForestRegressor(n_estimators=100),
     "Skl GBM":       GradientBoostingRegressor(n_estimators=100),
     "XGBoost":       XGBRegressor(n_estimators=100),
     "LightGBM":      LGBMRegressor(n_estimators=100)
