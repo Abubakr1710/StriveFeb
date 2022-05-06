@@ -12,7 +12,7 @@ from sklearn.linear_model  import LinearRegression
 
 import time
 from sklearn import metrics
-from sklearn import pipeline
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 #----------------------------------------------------------------------------------#
 df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
@@ -46,7 +46,7 @@ def get_features(x):
         mean_column_1 = np.mean(x[i, :, 0])
         std_column_2 =np.std(x[i, :, 1])
         min_column_3 =np.min(x[i, :, 2])
-        max_column_4 =np.min(x[i, :, 3])
+        std_column_4 =np.std(x[i, :, 3])
         mode_column_5 =np.min(x[i, :, 4])
         median_column_6 =np.min(x[i, :, 5])
         min_column_7 =np.min(x[i, :, 6])
@@ -58,7 +58,7 @@ def get_features(x):
         mean_column_13=np.min(x[i, :, 12])
         mean_column_14=np.min(x[i, :, 13])
 
-        feature.append((mean_column_1, std_column_2,min_column_3,max_column_4,mode_column_5,median_column_6,min_column_7,
+        feature.append((mean_column_1, std_column_2,min_column_3,std_column_4,mode_column_5,median_column_6,min_column_7,
                         max_column_8,mean_column_9,mode_column_10,median_column_11,std_column_12,mean_column_13,mean_column_14))
         #feature =np.hstack((mean_column_1, std_columns_2))
     return np.array(feature)
@@ -83,9 +83,20 @@ def tree_regressors():
     "XGBoost":       XGBRegressor(),
     "LightGBM":      LGBMRegressor()
     }
+    tree_regressor ={model_name: Pipeline([('scaler', StandardScaler()),('model', model)])for model_name, model in tree_regressor.items()}
     return tree_regressor
 
 reg =tree_regressors()
+#------------------------------------------------------------------------------#
+
+"""
+pipe = Pipeline([
+        ('scale', StandardScaler()),
+        ('reduce_dims', PCA(n_components=4)),
+        ('clf', SVC(kernel = 'linear', C = 1))])
+"""
+#mod_pipe ={model_name: Pipeline([('scaler', StandardScaler()),('model', model)])for model_name, model in reg.items()}
+
 results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'R2_score': [],'Time': [],})
 for model_name, model in reg.items():
 
