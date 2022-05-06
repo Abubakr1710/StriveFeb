@@ -4,6 +4,14 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 
+from sklearn.ensemble      import GradientBoostingRegressor
+from xgboost               import XGBRegressor
+from lightgbm              import LGBMRegressor
+from sklearn.linear_model  import LinearRegression
+
+import time
+from sklearn import metrics
+#----------------------------------------------------------------------------------#
 df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
 df = df.drop(columns="Date Time")
 
@@ -24,9 +32,9 @@ def get_sequence(data, seq_len, target_name):
 
 x, y = get_sequence(df, seq_len= 6, target_name='T (degC)')
 
-print(x.shape)
-print(y.shape)
-
+#print(x.shape)
+#print(y.shape)
+#----------------------------------------------------------------------------------#
 
 #Feature extraction
 def get_features(x):
@@ -53,8 +61,8 @@ def get_features(x):
     return np.array(feature)
 
 nx = get_features(x)
-print(nx.shape)
-
+#print(nx.shape)
+#----------------------------------------------------------------------------------------------------------------------------------------#
 
 # Splitting the data
 def split(X,y):
@@ -63,8 +71,42 @@ def split(X,y):
 
 X_train, X_test, y_train, y_test =split(nx, y)
 
-    
+#----------------------------------------------------------------------------------------------------------------------------------------#  
 
+# Pipeline
+def tree_regressors():
+    tree_regressor = {
+    'Linear':        LinearRegression(),
+    "Skl GBM":       GradientBoostingRegressor(),
+    "XGBoost":       XGBRegressor(),
+    "LightGBM":      LGBMRegressor()
+    }
+    return tree_regressor
+
+reg =tree_regressors()
+results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'Time': [],})
+for model_name, model in reg.items():
+
+    start_time = time.time()
+    model.fit(X_train, y_train)
+    total_time = time.time() - start_time
+        
+    pred = model.predict(X_test)
+    
+    results = results.append({"Model":    model_name,
+                              "MSE": metrics.mean_squared_error(y_test, pred),
+                              "MAB": metrics.mean_absolute_error(y_test, pred),
+                              "Time":     total_time
+                              },
+                              ignore_index=True)
+
+
+
+results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
+results_ord.index += 1 
+results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
+
+print(results_ord)
 
 
 
