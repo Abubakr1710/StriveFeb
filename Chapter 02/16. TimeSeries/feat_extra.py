@@ -1,6 +1,7 @@
 # Importng needed libraries
 import numpy as np
 import pandas as pd
+import pip
 
 from sklearn.model_selection import train_test_split
 
@@ -11,6 +12,8 @@ from sklearn.linear_model  import LinearRegression
 
 import time
 from sklearn import metrics
+from sklearn import pipeline
+from sklearn.preprocessing import StandardScaler
 #----------------------------------------------------------------------------------#
 df = pd.read_csv('Chapter 02/16. TimeSeries/climate.csv')
 df = df.drop(columns="Date Time")
@@ -73,7 +76,6 @@ X_train, X_test, y_train, y_test =split(nx, y)
 
 #----------------------------------------------------------------------------------------------------------------------------------------#  
 
-# Pipeline
 def tree_regressors():
     tree_regressor = {
     'Linear':        LinearRegression(),
