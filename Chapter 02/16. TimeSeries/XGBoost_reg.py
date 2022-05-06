@@ -73,44 +73,12 @@ def split(X,y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
     return X_train, X_test, y_train, y_test
 
-X_train, X_test, y_train, y_test = split(nx, y)
+X_train, X_test, y_train, y_test =split(nx, y)
 
-#----------------------------------------------------------------------------------------------------------------------------------------#  
-
-def tree_regressors():
-    tree_regressor = {
-    'Linear':        LinearRegression(),
-    "Skl GBM":       GradientBoostingRegressor(),
-    "XGBoost":       XGBRegressor(),
-    "LightGBM":      LGBMRegressor()
-    }
-    tree_regressor ={model_name: Pipeline([('scaler', StandardScaler()),('model', model)])for model_name, model in tree_regressor.items()}
-    return tree_regressor
-
-reg =tree_regressors()
-#------------------------------------------------------------------------------#
-
-results = pd.DataFrame({'Model': [], 'MSE': [], 'MAB': [], 'R2_score': [],'Time': [],})
-for model_name, model in reg.items():
-
-    start_time = time.time()
-    model.fit(X_train, y_train)
-    total_time = time.time() - start_time
-        
-    pred = model.predict(X_test)
-    
-    results = results.append({"Model":    model_name,
-                              "MSE": metrics.mean_squared_error(y_test, pred),
-                              "MAB": metrics.mean_absolute_error(y_test, pred),
-                              "R2_score": metrics.r2_score(y_test, pred),
-                              "Time":     total_time
-                              },
-                              ignore_index=True)
-
-
-
-results_ord = results.sort_values(by=['MSE'], ascending=True, ignore_index=True)
-results_ord.index += 1 
-results_ord.style.bar(subset=['MSE', 'MAE'], vmin=0, vmax=100, color='#5fba7d')
-
-print(results_ord)
+scaler =StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+mod =XGBRegressor()
+mod.fit(X_train, y_train)
+pred = mod.predict(X_test)
+print(metrics.mean_squared_error(y_test, pred))
