@@ -1,8 +1,7 @@
 # Importng needed libraries
-import lightgbm
 import numpy as np
 import pandas as pd
-import pip
+
 
 from sklearn.model_selection import train_test_split
 
@@ -61,7 +60,7 @@ def get_features(x):
 
         feature.append((mean_column_1, std_column_2,mean_column_3,std_column_4,median_column_5,median_column_6,median_column_7,
                         max_column_8,mean_column_9,min_column_10,median_column_11,std_column_12,mean_column_13,mean_column_14))
-        #feature =np.hstack((mean_column_1, std_columns_2))
+        
     return np.array(feature)
 
 nx = get_features(x)

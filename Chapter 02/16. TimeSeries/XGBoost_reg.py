@@ -1,9 +1,6 @@
 # Importng needed libraries
-import lightgbm
-from matplotlib.backend_bases import LocationEvent
 import numpy as np
 import pandas as pd
-import pip
 
 from sklearn.model_selection import train_test_split
 
@@ -12,9 +9,8 @@ from xgboost               import XGBRegressor
 from lightgbm              import LGBMRegressor
 from sklearn.linear_model  import LinearRegression
 
-import time
+
 from sklearn import metrics
-from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from joblib import Memory
 #----------------------------------------------------------------------------------#
