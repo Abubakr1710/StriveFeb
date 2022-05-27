@@ -24,14 +24,14 @@ pth='Chapter 03/03. MLP Regression/data/turkish_stocks.csv'
 X_train, X_test, y_train, y_test= dh.to_batches(pth, batch_size=8)
 
 #print(X_train)
-model = NeuralNetwork(8,400,200,100)
+model = NeuralNetwork(8,8,4,2)
 
 # Remember to validate your model: model.eval .........with torch.no_grad() ......model.train
 
 def torch_fit(X_train,y_train, model, lr, num_epochs):
     
     criterion = nn.L1Loss()
-    optimizer = optim.Adam(model.parameters(),lr)
+    optimizer = optim.SGD(model.parameters(),lr)
     print_every = 1
 
     train_lossses = []
@@ -59,7 +59,7 @@ def torch_fit(X_train,y_train, model, lr, num_epochs):
 
     plt.plot(train_lossses)
     plt.show()
-model = torch_fit(X_train=X_train, y_train=y_train,lr=0.002,num_epochs=50, model=model)
+model = torch_fit(X_train=X_train, y_train=y_train,lr=0.002,num_epochs=30, model=model)
 print('X_train',X_train.shape)
 print('y_train',y_train.shape)
 print('X_Test', X_test.shape)
