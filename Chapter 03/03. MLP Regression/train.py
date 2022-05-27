@@ -33,7 +33,7 @@ def torch_fit(X_train,y_train, model, lr, num_epochs):
 
         epoch_list = []
         print(f"Epoch: {epoch+1}/{num_epochs}")
-        for i in range(X_train.shape[0]):
+        for i in range(X_train.shape[1]):
             optimizer.zero_grad()
             output = model.forward(X_train)
             loss = criterion(output,y_train)
@@ -47,6 +47,11 @@ def torch_fit(X_train,y_train, model, lr, num_epochs):
 
     plt.plot(train_lossses)
     plt.show()
-model = torch_fit(X_train=X_train, y_train=y_train,lr=0.003,num_epochs=20, model=model)
+model = torch_fit(X_train=X_train, y_train=y_train,lr=0.001,num_epochs=20, model=model)
+print('X_train',X_train.shape)
+print('y_train',y_train.shape)
+print('X_Test', X_test.shape)
+print('y_test',y_test.shape)
+print(X_train.shape[2])
 
 
