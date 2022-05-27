@@ -21,7 +21,7 @@ torch.manual_seed(0)
 
 pth='Chapter 03/03. MLP Regression/data/turkish_stocks.csv'
 
-X_train, X_test, y_train, y_test= dh.to_batches(pth, batch_size=8)
+X_train, X_test, y_train, y_test= dh.to_batches(pth, batch_size=4)
 
 #print(X_train)
 model = NeuralNetwork(8,8,4,2)
@@ -64,6 +64,6 @@ print('X_train',X_train.shape)
 print('y_train',y_train.shape)
 print('X_Test', X_test.shape)
 print('y_test',y_test.shape)
-print(X_train.shape[2])
+print(X_train)
 
 
