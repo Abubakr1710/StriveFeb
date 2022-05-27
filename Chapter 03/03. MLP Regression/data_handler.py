@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
-
+torch.manual_seed(0)
 
 def load_data(pth):
 
@@ -51,3 +51,5 @@ def to_batches(pth, batch_size):
 
 
     return x_train, x_test, y_train, y_test
+
+
