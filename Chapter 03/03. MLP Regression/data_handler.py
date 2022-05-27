@@ -27,7 +27,8 @@ def load_data(pth):
 #(100, 7) -> (10,10,7)
 #(100, 1) -> (10,10,1)
 
-def to_batches(x_train, x_test, y_train, y_test, batch_size):
+def to_batches(pth, batch_size):
+    x_train, x_test, y_train, y_test = load_data(pth)
 
     n_batches = x_train.shape[0] // batch_size # 11 / 3 = 3.66 -> 3
     n_batches_test = x_test.shape[0] // batch_size
