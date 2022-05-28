@@ -2,6 +2,7 @@
 
 
 from cProfile import label
+import imp
 from pickletools import optimize
 from pyexpat import model
 from re import X
@@ -11,7 +12,8 @@ import data_handler as dh           # yes, you can import your code. Cool!
 import torch
 import torch.optim as optim
 import torch.nn as nn
-
+#import ignite.contrib.metrics.regression.R2Score as
+from ignite.contrib.metrics.regression import r2_score
 import matplotlib.pyplot as plt
 import numpy as np
 
