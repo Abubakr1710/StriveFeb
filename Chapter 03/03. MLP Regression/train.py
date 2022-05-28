@@ -55,6 +55,7 @@ def torch_fit(X_train,y_train, model, lr, num_epochs):
 
         mean_epoch_losses=sum(epoch_list)/len(epoch_list)
         train_lossses.append(mean_epoch_losses)
+        print(mean_epoch_losses)
     
 
     plt.plot(train_lossses)
@@ -64,6 +65,5 @@ print('X_train',X_train.shape)
 print('y_train',y_train.shape)
 print('X_Test', X_test.shape)
 print('y_test',y_test.shape)
-print(X_train)
 
 
