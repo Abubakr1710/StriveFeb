@@ -89,7 +89,7 @@ def torch_fit(X_train,X_test,y_train,y_test, model, lr, num_epochs):
 
     plt.plot(train_lossses,label = 'Train Losses')
     plt.plot(test_losses,label = 'Test Losses')
-    plt.plot(acc, label='Accuracy')
+    #plt.plot(acc, label='Accuracy')
     plt.legend()
     plt.show()
 model = torch_fit(X_train=X_train,X_test=X_test, y_train=y_train,y_test=y_test,lr=0.001,num_epochs=30, model=model)
