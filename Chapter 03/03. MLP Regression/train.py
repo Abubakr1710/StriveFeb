@@ -24,12 +24,15 @@ torch.manual_seed(0)
 
 pth='Chapter 03/03. MLP Regression/data/turkish_stocks.csv'
 
-X_train, X_test, y_train, y_test= dh.to_batches(pth, batch_size=8)
+X_train, X_test, y_train, y_test= dh.to_batches(pth, batch_size=16)
 
 #print(X_train)
-model = NeuralNetwork(8,32,16,8)
+model = NeuralNetwork(8,200,100,50)
 
 # Remember to validate your model: model.eval .........with torch.no_grad() ......model.train
+
+
+
 
 def torch_fit(X_train,X_test,y_train,y_test, model, lr, num_epochs):
     
@@ -66,9 +69,15 @@ def torch_fit(X_train,X_test,y_train,y_test, model, lr, num_epochs):
             for j, (X_test_batches,y_test_batches) in enumerate(zip(X_test,y_test)):
                 test_output=model.forward(X_test_batches)
                 test_loss=criterion(test_output,y_test_batches)
+                #test_loss_r2=criterion(y_test_batches, test_output)
+                target_mean=torch.mean(y_test_batches)
+                ss_tot=torch.sum((y_test_batches - target_mean)**2)
+                ss_res=torch.sum((y_test_batches - test_loss)**2)
+                r2=torch.abs(1 - ss_res/ss_tot)
                 test_epoch_list.append(test_loss.item())
-                mape=torch.abs((y_test_batches[0]-X_test_batches[0]) / y_test_batches[0])*100
-                mape_list.append(mape)
+                #mape=torch.abs((y_test_batches[0]-X_test_batches[0]) / y_test_batches[0])*100
+                
+                mape_list.append(r2)
 
 
 
@@ -82,17 +91,30 @@ def torch_fit(X_train,X_test,y_train,y_test, model, lr, num_epochs):
         acc.append(mean_mape)
 
 
-        print(f'Mean epoch loss for train{mean_epoch_losses}')
-        print(f'Mean epoch loss for test{mean_epoch_losses_test}')
-        print(f'Mean accuracy for epoch{mean_mape}')
-    
+        print(f'Mean epoch loss for train: {mean_epoch_losses}')
+        print(f'Mean epoch loss for test: {mean_epoch_losses_test}')
+        print(f'Mean accuracy for epoch: {mean_mape}')
 
+
+        model.train()
+
+    print(acc)
+
+        
+    
+    x_axis_acc=list(range(num_epochs))
+    plt.figure(figsize=(10,5))
+    plt.subplot(1,2,1)
     plt.plot(train_lossses,label = 'Train Losses')
     plt.plot(test_losses,label = 'Test Losses')
-    #plt.plot(acc, label='Accuracy')
+
+    plt.subplot(1,2,2)
+    plt.plot(x_axis_acc, acc, label='R2score')
     plt.legend()
     plt.show()
-model = torch_fit(X_train=X_train,X_test=X_test, y_train=y_train,y_test=y_test,lr=0.001,num_epochs=30, model=model)
+    #plt.plot(acc, label='Accuracy')
+    #plt.show()
+model = torch_fit(X_train=X_train,X_test=X_test, y_train=y_train,y_test=y_test,lr=0.001,num_epochs=100, model=model)
 print('X_train',X_train.shape)
 print('y_train',y_train.shape)
 print('X_Test', X_test.shape)
