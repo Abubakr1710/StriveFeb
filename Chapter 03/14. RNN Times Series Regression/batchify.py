@@ -31,7 +31,7 @@ def next_stock_batch(batch_size, n_steps, df_base, n_features):
 
     return x,y
 
-df = pd.read_csv('data_akbilgic.csv')
+df = pd.read_csv('Chapter 03/14. RNN Times Series Regression/data_akbilgic.csv')
 
 x, y = next_stock_batch(32, 10, df, 9)
 
