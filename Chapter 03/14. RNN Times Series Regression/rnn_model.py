@@ -15,7 +15,7 @@ class RNN(nn.Module):
         self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_size,\
                           num_layers=num_layers, batch_first=True)
         self.fc1 = nn.Linear(self.batch_size * self.hidden_size, 1024)
-        self.fc2 = nn.Linear(1024, self.seq_len)
+        self.fc2 = nn.Linear(1024, self.batch_size*self.seq_len)
 
     def forward(self, x):
         h_0 = T.zeros((self.num_layer, self.batch_size, self.hidden_size))
@@ -30,7 +30,7 @@ class RNN(nn.Module):
         # return rnn_out, h_n, last_hidden
 
 
-model = RNN(9, 5, 10, 32, 20)
+model = RNN(9, 5, 10, 32, 10)
 
 data = T.rand((32, 20, 9))
 
